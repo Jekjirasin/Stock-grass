@@ -275,7 +275,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxMxCqD22PTSY4Z0Ulpt8mZgqiVNqjoD11Lasinf1wTQAm-rdV21-xcRl31vL82h3dx/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyi3Ww1OXpC4WrFKQvbPk_gPHbNdc-qWIk787un4UnmZVHQh2p2crCMJt1UFzqXVMpq/exec";
 
   const boxesInput = document.getElementById('boxes');
   const totalEl = document.getElementById('totalPieces');
@@ -304,14 +304,27 @@
     submitBtn.disabled = true;
     submitBtn.innerText = "กำลังบันทึก...";
 
+    const customerVal = document.getElementById('customer').value.trim();
+    const withdrawnByVal = document.getElementById('withdrawnBy').value.trim();
+    const brandVal = document.getElementById('brand').value.trim();
+    const modelVal = document.getElementById('model').value.trim();
+    const ozVal = document.getElementById('oz').value.trim();
     const boxesVal = parseFloat(document.getElementById('boxes').value);
+
+    if (!customerVal || !withdrawnByVal || !brandVal || !ozVal || !modelVal || !(boxesVal > 0)) {
+      showToast('กรุณากรอกข้อมูลที่จำเป็นให้ครบ (ห้ามเว้นว่างหรือเว้นวรรคล้วน)', true);
+      submitBtn.disabled = false;
+      submitBtn.innerText = "บันทึกข้อมูล";
+      return;
+    }
+
     const payload = {
       type: 'out',
-      customer: document.getElementById('customer').value,
-      withdrawnBy: document.getElementById('withdrawnBy').value,
-      brand: document.getElementById('brand').value,
-      model: document.getElementById('model').value,
-      oz: document.getElementById('oz').value,
+      customer: customerVal,
+      withdrawnBy: withdrawnByVal,
+      brand: brandVal,
+      model: modelVal,
+      oz: ozVal,
       boxes: boxesVal,
       pieces: Math.round(boxesVal * 1000)
     };

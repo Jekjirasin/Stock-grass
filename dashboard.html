@@ -238,7 +238,7 @@
 </div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxMxCqD22PTSY4Z0Ulpt8mZgqiVNqjoD11Lasinf1wTQAm-rdV21-xcRl31vL82h3dx/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyi3Ww1OXpC4WrFKQvbPk_gPHbNdc-qWIk787un4UnmZVHQh2p2crCMJt1UFzqXVMpq/exec";
 
   const statusEl = document.getElementById('status');
   const stockGrid = document.getElementById('stockGrid');
@@ -302,7 +302,7 @@
     stockIn.forEach(r => events.push({
       date: r.date, type:'in',
       who: r.note || '-',
-      detail: [r.brand, r.model, r.oz + ' oz'].filter(Boolean).join(' · '),
+      detail: [r.brand, r.model, r.oz + ' oz', r.lot ? ('LOT ' + r.lot) : ''].filter(Boolean).join(' · '),
       pieces: Number(r.pieces) || 0
     }));
     stockOut.forEach(r => events.push({

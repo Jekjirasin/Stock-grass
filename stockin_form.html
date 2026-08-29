@@ -235,6 +235,11 @@
       </div>
 
       <div class="field">
+        <label for="lot">เลข LOT <span class="req">*</span></label>
+        <input type="text" id="lot" placeholder="เช่น LOT-2408-01">
+      </div>
+
+      <div class="field">
         <label for="boxes">จำนวนที่รับเข้า (กล่อง) <span class="req">*</span></label>
         <input type="number" id="boxes" min="0.01" step="0.01" required placeholder="เช่น 10, 5.5">
         <div class="note">1 กล่อง = 1,000 ใบ · ใส่ทศนิยมได้</div>
@@ -263,7 +268,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxMxCqD22PTSY4Z0Ulpt8mZgqiVNqjoD11Lasinf1wTQAm-rdV21-xcRl31vL82h3dx/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyi3Ww1OXpC4WrFKQvbPk_gPHbNdc-qWIk787un4UnmZVHQh2p2crCMJt1UFzqXVMpq/exec";
 
   const boxesInput = document.getElementById('boxes');
   const totalEl = document.getElementById('totalPieces');
@@ -292,15 +297,29 @@
     submitBtn.disabled = true;
     submitBtn.innerText = "กำลังบันทึก...";
 
+    const brandVal = document.getElementById('brand').value.trim();
+    const modelVal = document.getElementById('model').value.trim();
+    const ozVal = document.getElementById('oz').value.trim();
+    const lotVal = document.getElementById('lot').value.trim();
+    const noteVal = document.getElementById('note').value.trim();
     const boxesVal = parseFloat(document.getElementById('boxes').value);
+
+    if (!brandVal || !ozVal || !modelVal || !(boxesVal > 0)) {
+      showToast('กรุณากรอกข้อมูลที่จำเป็นให้ครบ (ห้ามเว้นว่างหรือเว้นวรรคล้วน)', true);
+      submitBtn.disabled = false;
+      submitBtn.innerText = "บันทึกรับเข้า";
+      return;
+    }
+
     const payload = {
       type: 'in',
-      brand: document.getElementById('brand').value,
-      model: document.getElementById('model').value,
-      oz: document.getElementById('oz').value,
+      brand: brandVal,
+      model: modelVal,
+      oz: ozVal,
+      lot: lotVal,
       boxes: boxesVal,
       pieces: Math.round(boxesVal * 1000),
-      note: document.getElementById('note').value
+      note: noteVal
     };
 
     fetch(SCRIPT_URL, {
