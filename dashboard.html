@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แดชบอร์ดสต็อกแก้ว</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1B2A2E;
+    --ink-soft:#5C7075;
+    --line:#D8E3E1;
+    --glass-1:#EAF3F1;
+    --glass-2:#DCEAE7;
+    --paper:#FFFFFF;
+    --teal:#0E6E62;
+    --teal-deep:#0A4F47;
+    --amber:#D98E3B;
+    --amber-deep:#9C5F16;
+    --err:#C2483B;
+    --radius:16px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    min-height:100vh;
+    font-family:'Sarabun', sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(circle at 15% 0%, #F4FAF8 0%, transparent 45%),
+      radial-gradient(circle at 100% 0%, #F3EADA 0%, transparent 55%),
+      linear-gradient(180deg, var(--glass-1) 0%, var(--glass-2) 100%);
+    padding:32px 16px 60px;
+  }
+
+  .wrap{ max-width:920px; margin:0 auto; }
+
+  header{ text-align:center; margin-bottom:26px; }
+  .eyebrow{
+    font-size:12.5px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--teal-deep);
+    font-weight:600;
+    margin-bottom:4px;
+  }
+  h1{
+    font-family:'Kanit', sans-serif;
+    font-size:26px;
+    font-weight:600;
+    margin:0;
+  }
+  .subnav{ margin-top:10px; font-size:13.5px; }
+  .subnav a{ color:var(--teal-deep); font-weight:600; text-decoration:none; margin:0 8px; }
+  .subnav a:hover{ text-decoration:underline; }
+
+  .status{
+    text-align:center;
+    font-size:13.5px;
+    color:var(--ink-soft);
+    margin-bottom:18px;
+  }
+  .status.error{ color:var(--err); font-weight:600; }
+
+  section{ margin-bottom:30px; }
+  .section-title{
+    font-family:'Kanit', sans-serif;
+    font-size:16px;
+    font-weight:600;
+    margin:0 0 12px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .section-title .count{
+    font-family:'Sarabun', sans-serif;
+    font-weight:400;
+    font-size:12.5px;
+    color:var(--ink-soft);
+  }
+
+  /* ---- stock summary cards ---- */
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(190px, 1fr));
+    gap:12px;
+  }
+  .stock-card{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:16px;
+    box-shadow:0 12px 26px -18px rgba(14,60,53,.3);
+  }
+  .stock-card .brand{
+    display:inline-block;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.04em;
+    padding:3px 8px;
+    border-radius:999px;
+    background:#E7F2EF;
+    color:var(--teal-deep);
+    margin-bottom:8px;
+  }
+  .stock-card .brand.Vanda{ background:#FBF3E7; color:var(--amber-deep); }
+  .stock-card .model{
+    font-family:'Kanit', sans-serif;
+    font-weight:600;
+    font-size:15px;
+    margin-bottom:2px;
+  }
+  .stock-card .oz{ font-size:12.5px; color:var(--ink-soft); margin-bottom:10px; }
+  .stock-card .remaining{
+    font-family:'Kanit', sans-serif;
+    font-size:22px;
+    font-weight:700;
+    color:var(--teal-deep);
+  }
+  .stock-card .remaining.low{ color:var(--err); }
+  .stock-card .remaining-label{ font-size:11.5px; color:var(--ink-soft); }
+  .stock-card .boxes{ font-size:12px; color:var(--ink-soft); margin-top:2px; }
+
+  .empty{
+    text-align:center;
+    padding:30px 20px;
+    color:var(--ink-soft);
+    font-size:14px;
+    background:var(--paper);
+    border:1px dashed var(--line);
+    border-radius:14px;
+  }
+
+  /* ---- filter ---- */
+  .filter-bar{
+    display:flex;
+    gap:10px;
+    margin-bottom:14px;
+    flex-wrap:wrap;
+  }
+  .filter-bar input{
+    flex:1;
+    min-width:180px;
+    padding:10px 14px;
+    font-size:14px;
+    font-family:'Sarabun', sans-serif;
+    border:1.5px solid var(--line);
+    border-radius:10px;
+    background:var(--paper);
+  }
+  .filter-bar input:focus{
+    outline:none;
+    border-color:var(--teal);
+    box-shadow:0 0 0 3px rgba(14,110,98,0.14);
+  }
+
+  /* ---- history table ---- */
+  .history{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 12px 26px -18px rgba(14,60,53,.3);
+  }
+  .h-row{
+    display:grid;
+    grid-template-columns:86px 56px 1fr 1fr 90px;
+    gap:10px;
+    padding:12px 16px;
+    align-items:center;
+    border-bottom:1px solid var(--line);
+    font-size:13px;
+  }
+  .h-row:last-child{ border-bottom:none; }
+  .h-row.head{
+    background:#F5F9F8;
+    font-weight:600;
+    color:var(--ink-soft);
+    font-size:11.5px;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+  }
+  .h-date{ color:var(--ink-soft); font-size:12px; }
+  .badge{
+    display:inline-block;
+    font-size:11px;
+    font-weight:700;
+    padding:3px 8px;
+    border-radius:999px;
+    text-align:center;
+  }
+  .badge.out{ background:#E7F2EF; color:var(--teal-deep); }
+  .badge.in{ background:#FBF3E7; color:var(--amber-deep); }
+  .h-who{ font-weight:600; }
+  .h-detail{ color:var(--ink-soft); }
+  .h-pieces{ font-family:'Kanit', sans-serif; font-weight:600; text-align:right; }
+  .h-pieces.in{ color:var(--amber-deep); }
+  .h-pieces.out{ color:var(--teal-deep); }
+
+  @media (max-width:640px){
+    .h-row{ grid-template-columns:1fr; gap:4px; padding:12px 14px; }
+    .h-row.head{ display:none; }
+    .h-date{ order:1; }
+    .badge{ order:0; justify-self:start; margin-bottom:4px; }
+    .h-who{ order:2; }
+    .h-detail{ order:3; }
+    .h-pieces{ order:4; text-align:left; margin-top:2px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">ระบบตัดสต็อกแก้ว</div>
+    <h1>แดชบอร์ดสต็อก</h1>
+    <div class="subnav">
+      <a href="stock_form.html">ฟอร์มเบิก</a> ·
+      <a href="stockin_form.html">ฟอร์มรับเข้า</a>
+    </div>
+  </header>
+
+  <div class="status" id="status">กำลังโหลดข้อมูล...</div>
+
+  <section>
+    <div class="section-title">คงเหลือในสต็อก <span class="count" id="stockCount"></span></div>
+    <div class="grid" id="stockGrid"></div>
+  </section>
+
+  <section>
+    <div class="section-title">ประวัติการเบิก / รับเข้า <span class="count" id="historyCount"></span></div>
+    <div class="filter-bar">
+      <input type="text" id="filterInput" placeholder="ค้นหาผู้เบิก, ลูกค้า, ยี่ห้อ, รุ่น...">
+    </div>
+    <div class="history" id="historyTable"></div>
+  </section>
+</div>
+
+<script>
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxMxCqD22PTSY4Z0Ulpt8mZgqiVNqjoD11Lasinf1wTQAm-rdV21-xcRl31vL82h3dx/exec";
+
+  const statusEl = document.getElementById('status');
+  const stockGrid = document.getElementById('stockGrid');
+  const stockCount = document.getElementById('stockCount');
+  const historyTable = document.getElementById('historyTable');
+  const historyCount = document.getElementById('historyCount');
+  const filterInput = document.getElementById('filterInput');
+
+  let allEvents = [];
+
+  function fmtDate(iso){
+    const d = new Date(iso);
+    if (isNaN(d)) return iso;
+    return d.toLocaleDateString('th-TH', { day:'2-digit', month:'short', year:'2-digit' }) +
+      ' ' + d.toLocaleTimeString('th-TH', { hour:'2-digit', minute:'2-digit' });
+  }
+
+  function renderStock(stockIn, stockOut){
+    const map = {};
+    function key(r){ return r.brand + '|' + r.model + '|' + r.oz; }
+
+    stockIn.forEach(r => {
+      const k = key(r);
+      if (!map[k]) map[k] = { brand:r.brand, model:r.model, oz:r.oz, inPieces:0, outPieces:0, inBoxes:0, outBoxes:0 };
+      map[k].inPieces += Number(r.pieces) || 0;
+      map[k].inBoxes += Number(r.boxes) || 0;
+    });
+    stockOut.forEach(r => {
+      const k = key(r);
+      if (!map[k]) map[k] = { brand:r.brand, model:r.model, oz:r.oz, inPieces:0, outPieces:0, inBoxes:0, outBoxes:0 };
+      map[k].outPieces += Number(r.pieces) || 0;
+      map[k].outBoxes += Number(r.boxes) || 0;
+    });
+
+    const items = Object.values(map).sort((a,b) => (a.brand+a.model).localeCompare(b.brand+b.model));
+    stockCount.textContent = '(' + items.length + ' รายการ)';
+
+    if (items.length === 0){
+      stockGrid.innerHTML = '<div class="empty">ยังไม่มีข้อมูลสต็อก — เริ่มบันทึกรับเข้าก่อนได้เลย</div>';
+      return;
+    }
+
+    stockGrid.innerHTML = items.map(it => {
+      const remaining = it.inPieces - it.outPieces;
+      const remBoxes = (it.inBoxes - it.outBoxes);
+      const low = remaining <= 1000;
+      return `
+        <div class="stock-card">
+          <span class="brand ${it.brand}">${it.brand || '-'}</span>
+          <div class="model">${it.model || '(ไม่ระบุรุ่น)'}</div>
+          <div class="oz">${it.oz} ออนซ์</div>
+          <div class="remaining ${low ? 'low' : ''}">${remaining.toLocaleString('th-TH')}</div>
+          <div class="remaining-label">ใบคงเหลือ</div>
+          <div class="boxes">≈ ${remBoxes.toLocaleString('th-TH', {maximumFractionDigits:2})} กล่อง</div>
+        </div>`;
+    }).join('');
+  }
+
+  function buildEvents(stockIn, stockOut){
+    const events = [];
+    stockIn.forEach(r => events.push({
+      date: r.date, type:'in',
+      who: r.note || '-',
+      detail: [r.brand, r.model, r.oz + ' oz'].filter(Boolean).join(' · '),
+      pieces: Number(r.pieces) || 0
+    }));
+    stockOut.forEach(r => events.push({
+      date: r.date, type:'out',
+      who: r.withdrawnBy || '-',
+      detail: (r.customer ? r.customer + ' · ' : '') + [r.brand, r.model, r.oz + ' oz'].filter(Boolean).join(' · '),
+      pieces: Number(r.pieces) || 0
+    }));
+    events.sort((a,b) => new Date(b.date) - new Date(a.date));
+    return events;
+  }
+
+  function renderHistory(events){
+    historyCount.textContent = '(' + events.length + ' รายการ)';
+    if (events.length === 0){
+      historyTable.innerHTML = '<div class="empty">ยังไม่มีประวัติ</div>';
+      return;
+    }
+    const rows = events.map(ev => `
+      <div class="h-row">
+        <div class="h-date">${fmtDate(ev.date)}</div>
+        <div><span class="badge ${ev.type}">${ev.type === 'in' ? 'เข้า' : 'ออก'}</span></div>
+        <div class="h-who">${ev.who}</div>
+        <div class="h-detail">${ev.detail}</div>
+        <div class="h-pieces ${ev.type}">${ev.type === 'in' ? '+' : '-'}${ev.pieces.toLocaleString('th-TH')}</div>
+      </div>`).join('');
+
+    historyTable.innerHTML = `
+      <div class="h-row head">
+        <div>วันที่</div><div>ประเภท</div><div>ผู้ทำรายการ</div><div>รายละเอียด</div><div style="text-align:right">จำนวนใบ</div>
+      </div>` + rows;
+  }
+
+  filterInput.addEventListener('input', () => {
+    const q = filterInput.value.trim().toLowerCase();
+    const filtered = q
+      ? allEvents.filter(ev => (ev.who + ' ' + ev.detail).toLowerCase().includes(q))
+      : allEvents;
+    renderHistory(filtered);
+  });
+
+  fetch(SCRIPT_URL)
+    .then(res => res.json())
+    .then(data => {
+      if (data.result === 'error') throw new Error(data.error || 'unknown error');
+      const stockIn = data.stockIn || [];
+      const stockOut = data.stockOut || [];
+      statusEl.textContent = 'อัปเดตล่าสุด ' + new Date().toLocaleTimeString('th-TH', { hour:'2-digit', minute:'2-digit' });
+      renderStock(stockIn, stockOut);
+      allEvents = buildEvents(stockIn, stockOut);
+      renderHistory(allEvents);
+    })
+    .catch(err => {
+      statusEl.textContent = 'โหลดข้อมูลไม่สำเร็จ: ' + err.message + ' (ตรวจสอบว่า deploy Apps Script แบบ "Anyone" แล้ว)';
+      statusEl.classList.add('error');
+      stockGrid.innerHTML = '<div class="empty">ไม่สามารถโหลดข้อมูลสต็อกได้</div>';
+      historyTable.innerHTML = '<div class="empty">ไม่สามารถโหลดประวัติได้</div>';
+    });
+</script>
+
+</body>
+</html>
